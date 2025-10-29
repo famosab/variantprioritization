@@ -95,6 +95,27 @@ genome: 'GRCh37'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
+### Use annotation-cache for VEP
+
+[Annotation-cache](https://annotation-cache.github.io) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with nf-core/variantprioritization.
+It contains some genome builds which can be found by checking the contents of the S3 bucket.
+
+VEP cache are stored at the following location on S3:
+
+```bash
+vep_cache = s3://annotation-cache/vep_cache/
+```
+
+The contents of said cache can be listed with the following command using the S3 CLI:
+
+```bash
+aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
+```
+
+Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
+
+Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
+
 ### Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:

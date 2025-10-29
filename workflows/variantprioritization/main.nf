@@ -3,6 +3,8 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+//include { ANNOTATION_CACHE_INITIALISATION } from '../../subworkflows/local/annotation_cache_initialisation'
+
 include { VCF_PREPROCESSING      } from '../../subworkflows/local/vcf_preprocessing'
 include { FORMAT_FILES           } from '../../subworkflows/local/format_files'
 include { PCGR as RUN_PCGR       } from '../../modules/local/pcgr/main'
@@ -39,6 +41,20 @@ workflow VARIANTPRIORITIZATION {
 
 
     main:
+
+    // Looks for cache information either locally or on the cloud
+    // ANNOTATION_CACHE_INITIALISATION(
+    //     true,
+    //     params.vep_cache,
+    //     params.vep_species,
+    //     params.vep_cache_version,
+    //     params.vep_genome,
+    //     params.vep_custom_args,
+    //     "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+    // )
+
+    // snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
+    // vep_cache = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
 
     fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
     if (params.database) { ch_pcgr_dir = Channel.fromPath("${params.database}/data/${params.genome.toLowerCase()}") } else { exit 1, "Please provide a path to the PCGR annotation database." }
